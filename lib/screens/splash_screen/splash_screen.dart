@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
-
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -30,11 +28,11 @@ class SplashScreen extends StatelessWidget {
               width: double.infinity,
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF53b175), Colors.lightGreen],
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                  )),
-              child:  Column(
+                colors: [Color(0xFF53b175), Colors.lightGreen],
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+              )),
+              child: Column(
                 children: [
                   const SizedBox(
                     height: 200,
@@ -42,7 +40,9 @@ class SplashScreen extends StatelessWidget {
                   SizedBox(
                       height: 250,
                       width: 250,
-                      child: Image.asset('assets/images/shopping.png',)),
+                      child: Image.asset(
+                        'assets/images/shopping.png',
+                      )),
                   const SizedBox(
                     height: 40,
                   ),

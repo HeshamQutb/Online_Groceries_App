@@ -1,11 +1,9 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 import '../../shared/components/components.dart';
@@ -19,172 +17,235 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroceriesCubit, GroceriesStates>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
-        var model = GroceriesCubit.get(context).bannersModel;
         return ConditionalBuilder(
-          condition: model != null,
-          builder: (BuildContext context) => SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      cubit.changeNavBar(1);
-                    },
-                    child: _buildSearchContainer(),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildCarouselSlider(model),
-                  const SizedBox(height: 10),
-                  _buildSectionTitle('Exclusive Offer', () {}),
-                  const SizedBox(height: 10),
-                  productBuilder(model),
-                  _buildSectionTitle('Best Selling', () {}),
-                  const SizedBox(height: 10),
-                  productBuilder(model),
-                  _buildSectionTitle('Groceries', () {}),
-                  const SizedBox(height: 10),
-                  productBuilder(model),
-                ],
-              ),
-            ),
-          ),
-          fallback: (BuildContext context) => getShimmerLoading(context,model),
+          condition: true,
+          builder: (BuildContext context) => getHomePage(context, cubit),
+          fallback: (BuildContext context) => getShimmerLoading(),
         );
       },
     );
   }
 
-  Widget productBuilder(model) => SizedBox(
-    height: 200,
-    child: ListView.separated(
-      scrollDirection: Axis.horizontal,
-      shrinkWrap: true,
+  Widget getHomePage(context, cubit) {
+    return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) => GestureDetector(
-          onTap:(){
-            navigateTo(context, ItemScreen(model: model,));
-            },
-          child: productItemBuilder()),
-      separatorBuilder: (context, index) => const SizedBox(width: 10,),
-      itemCount: 5,
-    ),
-  );
-
-  Widget productItemBuilder() => Container(
-    height: 200,
-    width: 150,
-    clipBehavior: Clip.hardEdge,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(
-        color: Colors.grey, // Set the border color
-        width: 0.2, // Set the border width
-      ),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Image(
-            image: AssetImage('assets/images/otp.jpg'),
-          ),
-          const SizedBox(
-            height: 2,
-          ),
-          const Text(
-            'Red Apple',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 2,
-          ),
-          const Text(
-            '1k, Price',
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              const Text(
-                '\$4.99',
-                style: TextStyle(fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                cubit.changeNavBar(1);
+              },
+              child: const ListTile(
+                leading: Icon(
+                  IconBroken.Search,
+                  color: Colors.black54,
+                ),
+                title: Text(
+                  'Search Store',
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                ),
               ),
-              const Spacer(),
-              Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: defaultColor,
-                      borderRadius: BorderRadius.circular(15)
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            CarouselSlider(
+              items: [
+                _buildImage(
+                    'https://as2.ftcdn.net/v2/jpg/03/20/46/13/1000_F_320461388_5Snqf6f2tRIqiWlaIzNWrCUm1Ocaqhfm.jpg'),
+                _buildImage(
+                    'https://as1.ftcdn.net/v2/jpg/04/14/51/80/1000_F_414518045_jxAaMA75UWWwHyTvMkS0GVMtqF56mFmM.jpg'),
+                _buildImage(
+                    'https://as1.ftcdn.net/v2/jpg/02/62/18/46/1000_F_262184611_bXhmboL9oE6k2ILu4qXxNWFhNJCEbTn2.jpg'),
+              ],
+              options: CarouselOptions(
+                height: 150,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                viewportFraction: 1,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                scrollDirection: Axis.horizontal,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Exclusive Offer',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.add,
-                        size: 28,
-                        color: Colors.white,
-                      )
-                  ))
-            ],
-          )
-        ],
-      ),
-    ),
-  );
-
-  Widget _buildSearchContainer() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-          width: 0.2,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(color: defaultColor),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              height: 200,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      navigateTo(context, const ItemScreen());
+                    },
+                    child: productBuilder()),
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 10,
+                ),
+                itemCount: 5,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Best Selling',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(color: defaultColor),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              height: 200,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () {
+                    navigateTo(context, const ItemScreen());
+                  },
+                  child: productBuilder(),
+                ),
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 10,
+                ),
+                itemCount: 5,
+              ),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      width: double.infinity,
-      height: 50,
-      child: const Row(
-        children: [
-          Icon(IconBroken.Search, size: 20),
-          SizedBox(width: 10),
-          Text('Search Store', style: TextStyle(color: Colors.grey, fontSize: 20)),
-        ],
       ),
     );
   }
 
-  Widget _buildCarouselSlider(bannersModel) {
-    return CarouselSlider(
-      items: [
-        _buildImage(bannersModel.image),
-        _buildImage(bannersModel.image1),
-        _buildImage(bannersModel.image2),
-      ],
-      options: CarouselOptions(
+  Widget productBuilder() => Container(
         height: 200,
-        initialPage: 0,
-        enableInfiniteScroll: true,
-        viewportFraction: 1,
-        reverse: false,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 3),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
-        scrollDirection: Axis.horizontal,
-      ),
-    );
-  }
+        width: 150,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.grey, // Set the border color
+            width: 0.2, // Set the border width
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // CachedNetworkImage(
+              //   imageUrl: productModel.images,
+              //   fit: BoxFit.fill,
+              // ),
+              Center(
+                child: SizedBox(
+                    height: 90,
+                    width: 90,
+                    child: Image.asset('assets/images/otp.jpg')),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              const Text(
+                'product_name',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              const Text(
+                'product_weight',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: 80,
+                    height: 30,
+                    child: Text(
+                      '\$ product_price',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: defaultColor,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.add,
+                            size: 28,
+                            color: Colors.white,
+                          )))
+                ],
+              )
+            ],
+          ),
+        ),
+      );
 
   Widget _buildImage(String imageUrl) {
     return Container(
@@ -201,26 +262,9 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, VoidCallback onTap) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-        const Spacer(),
-        TextButton(
-          onPressed: onTap,
-          child: const Text(
-            'See All',
-            style: TextStyle(color: defaultColor),
-          ),
-        )
-      ],
-    );
-  }
 
-  Widget getShimmerLoading(BuildContext context,model) {
+
+  Widget getShimmerLoading() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
@@ -231,37 +275,109 @@ class ShopScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSearchContainer(),
-              const SizedBox(height: 10),
+              const ListTile(
+                leading: Icon(
+                  IconBroken.Search,
+                  color: Colors.black54,
+                ),
+                title: Text(
+                  'Search Store',
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                ),
+              ),
+              const SizedBox(height: 15),
               Container(
                 height: 200,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20)
+                    borderRadius: BorderRadius.circular(20)),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 20,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    width: 40,
+                    height: 20,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+              const SizedBox(height: 15),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    productBuilder(),
+                    productBuilder(),
+                    productBuilder(),
+                  ],
                 ),
               ),
-              const SizedBox(height: 10),
-              _buildSectionTitle('Exclusive Offer', () {}),
-              const SizedBox(height: 10),
-              productBuilder(model),
-              _buildSectionTitle('Best Selling', () {}),
-              const SizedBox(height: 10),
-              productBuilder(model),
-              _buildSectionTitle('Groceries', () {}),
-              const SizedBox(height: 10),
-              productBuilder(model),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 20,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    width: 40,
+                    height: 20,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+              const SizedBox(height: 15),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    productBuilder(),
+                    productBuilder(),
+                    productBuilder(),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 20,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    width: 40,
+                    height: 20,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+              const SizedBox(height: 15),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    productBuilder(),
+                    productBuilder(),
+                    productBuilder(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
-
-
-
-
 
 

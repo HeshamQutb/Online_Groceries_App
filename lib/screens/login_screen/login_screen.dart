@@ -2,10 +2,9 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../layout/home_layout.dart';
+import '../../layout/root_layout.dart';
 import '../../shared/components/components.dart';
 import '../../shared/network/local/cache_helper.dart';
-import '../../shared/styles/colors.dart';
 import '../register/register_screen.dart';
 import 'login_cubit/cubit.dart';
 import 'login_cubit/states.dart';
@@ -27,16 +26,24 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state is LoginErrorState) {
             showToast(message: state.error, state: ToastState.error);
           }
           if (state is LoginSuccessState) {
-            await CacheHelper.setData(key: 'uId', value: state.uId)
-                .then((value) {
-              navigateAndFinish(context, const HomeLayout());
+            CacheHelper.setData(
+              key: 'uId',
+              value: state.uId,
+            ).then((value) {
+              navigateAndFinish(
+                context,
+                const RootLayout(),
+              );
             });
-            showToast(message: 'Successfully Login', state: ToastState.success);
+            showToast(
+              message: 'Successfully Login',
+              state: ToastState.success,
+            );
           }
         },
         builder: (context, state) {
@@ -52,11 +59,11 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Center(
-                          child: Icon(
-                            Icons.local_grocery_store_outlined,
-                            size: 60,
-                            color: defaultColor,
+                        SizedBox(
+                          width: double.infinity,
+                          height: 150,
+                          child: Image.asset(
+                            'assets/images/otp.jpg',
                           ),
                         ),
                         const SizedBox(
@@ -65,29 +72,35 @@ class LoginScreen extends StatelessWidget {
                         const Text(
                           'Login ',
                           style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
                         const Text(
                           'Enter your email and password!',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         defaultTextField(
-                            controller: emailController,
-                            type: TextInputType.emailAddress,
-                            validate: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please Enter Email Address!';
-                              }
-                              return null;
-                            },
-                            label: 'Email Address',
-                            prefixIcon: Icons.email_outlined),
+                          controller: emailController,
+                          type: TextInputType.emailAddress,
+                          validate: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter Email Address!';
+                            }
+                            return null;
+                          },
+                          label: 'Email Address',
+                          prefixIcon: Icons.email_outlined,
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -133,13 +146,15 @@ class LoginScreen extends StatelessWidget {
                               function: () {
                                 if (formKey.currentState!.validate()) {
                                   cubit.userLogin(
-                                      email: emailController.text,
-                                      password: passwordController.text);
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
                                 }
                               },
                               text: 'Login'),
-                          fallback: (BuildContext context) =>
-                              const Center(child: CircularProgressIndicator()),
+                          fallback: (BuildContext context) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
                         const SizedBox(
                           height: 30,
@@ -150,7 +165,9 @@ class LoginScreen extends StatelessWidget {
                             const Text(
                               'Don\'t have an account !',
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             defaultTextButton(
                                 onPressed: () {

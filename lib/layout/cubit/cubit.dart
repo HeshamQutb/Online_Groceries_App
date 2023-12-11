@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/layout/cubit/states.dart';
+import 'package:online_groceries/models/products_model.dart';
 
 
 import '../../models/banners_model.dart';
@@ -17,7 +18,7 @@ import '../../screens/onboarding_screen/on_boarding_screen.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
-import '../home_layout.dart';
+import '../root_layout.dart';
 
 class GroceriesCubit extends Cubit<GroceriesStates> {
   GroceriesCubit() : super(GroceriesInitState());
@@ -51,7 +52,7 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
     Future.delayed(const Duration(seconds: 2), () {
       if (CacheHelper.getData(key: 'onBoarding') != null) {
         if (uId != null) {
-          navigateAndFinish(context, const HomeLayout());
+          navigateAndFinish(context, const RootLayout());
         } else {
           navigateAndFinish(context, const LoginScreen());
         }
@@ -61,6 +62,7 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
     });
     emit(GroceriesSplashState());
   }
+
 
   BannersModel? bannersModel;
   void getBanners() {
@@ -75,4 +77,15 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
 
 
 
+  ProductModel? productModel;
+  void getProducts() {
+    emit(GetProductsLoadingState());
+    FirebaseFirestore.instance.collection('products').doc().get().then((value) {
+      print(value.data());
+      productModel = ProductModel.fromJson(value.data());
+      emit(GetProductsSuccessState());
+    }).catchError((error) {
+      emit(GetProductsErrorState(error.toString()));
+    });
+  }
 }

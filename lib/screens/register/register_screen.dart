@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/screens/register/register_cubit/cubit.dart';
 import 'package:online_groceries/screens/register/register_cubit/states.dart';
 
-import '../../layout/home_layout.dart';
+import '../../layout/root_layout.dart';
 import '../../shared/components/components.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
@@ -284,7 +284,7 @@ class _VerificationState extends State<Verification> {
                           key: 'uId',
                           value:FirebaseAuth.instance.currentUser?.uid,
                         ).then((value) {
-                          navigateAndFinish(context, const HomeLayout());
+                          navigateAndFinish(context, const RootLayout());
 
                         });
                         showToast(

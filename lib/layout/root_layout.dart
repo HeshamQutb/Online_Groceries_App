@@ -5,13 +5,13 @@ import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
 
-class HomeLayout extends StatelessWidget {
-  const HomeLayout({super.key});
+class RootLayout extends StatelessWidget {
+  const RootLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GroceriesCubit()..getBanners(),
+      create: (context) => GroceriesCubit(),
       child: BlocConsumer<GroceriesCubit, GroceriesStates>(
         listener: (context, state) {
           // TODO: implement listener
