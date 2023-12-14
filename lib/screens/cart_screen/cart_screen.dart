@@ -4,6 +4,7 @@ import 'package:online_groceries/shared/components/components.dart';
 import 'package:online_groceries/shared/styles/colors.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
+import '../../shared/styles/icon_broken.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -15,12 +16,12 @@ class CartScreen extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return getMyCart();
+        return getMyCart(context);
       },
     );
   }
 
-  Widget getMyCart() {
+  Widget getMyCart(context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -37,7 +38,53 @@ class CartScreen extends StatelessWidget {
             ),
           ),
           defaultButton(
-              function: (){},
+              function: (){
+                showModalBottomSheet(context: context, builder: (context){
+                  return SizedBox(
+                    height: 200,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+                          leading: const Icon(IconBroken.Camera),
+                          title: const Text('Take a photo'),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 0.5,
+                          color: Colors.grey,
+                        ),
+                        ListTile(
+                          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                          leading: const Icon(IconBroken.Image),
+                          title: const Text('Choose from gallery'),
+                          onTap: () {
+
+                          },
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 0.5,
+                          color: Colors.grey,
+                        ),
+                        defaultTextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            text: 'Cancel',
+                            size: 15
+                        )
+                      ],
+                    ),
+                  );
+                },
+                  
+                );
+              },
               text: 'Go to Checkout',
           ),
         ],

@@ -1,10 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 import '../../shared/components/components.dart';
@@ -21,7 +18,6 @@ class CategoryScreen extends StatelessWidget {
       listener: (context, state) {
       },
       builder: (context, state) {
-        var size = MediaQuery.sizeOf(context);
         return Scaffold(
           appBar: PreferredSize(
               preferredSize: const Size.fromHeight(60),

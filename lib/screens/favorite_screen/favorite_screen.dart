@@ -53,7 +53,7 @@ class FavoriteScreen extends StatelessWidget {
           height: 80,
           child: Image.asset('assets/images/otp.jpg'),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         Expanded(

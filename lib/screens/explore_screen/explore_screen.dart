@@ -5,7 +5,6 @@ import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 import '../../shared/components/components.dart';
 import '../../shared/styles/icon_broken.dart';
-import '../item_screen/item_screen.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
