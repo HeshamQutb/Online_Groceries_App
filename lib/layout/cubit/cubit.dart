@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/layout/cubit/states.dart';
-import 'package:online_groceries/models/products_model.dart';
+import 'package:online_groceries/models/exclusive_offers_model.dart';
+import 'package:online_groceries/models/groceries_model.dart';
 
 
 import '../../models/banners_model.dart';
@@ -77,15 +78,40 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
 
 
 
-  ProductModel? productModel;
+  GroceriesModel? productModel;
   void getProducts() {
     emit(GetProductsLoadingState());
     FirebaseFirestore.instance.collection('products').doc().get().then((value) {
       print(value.data());
-      productModel = ProductModel.fromJson(value.data());
+      productModel = GroceriesModel.fromJson(value.data());
       emit(GetProductsSuccessState());
     }).catchError((error) {
       emit(GetProductsErrorState(error.toString()));
     });
   }
+
+
+  List<ExclusiveModel> offers = [];
+
+  Future<void> getExclusiveOffers() async {
+    emit(GetExclusiveOffersLoadingState());
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('exclusive_offers')
+          .get();
+
+      offers = querySnapshot.docs.map((doc) {
+        return ExclusiveModel.fromJson(doc.data());
+      }).toList();
+
+      emit(GetExclusiveOffersSuccessState());
+    } catch (error) {
+      print('Error fetching exclusive offers: $error');
+      emit(GetExclusiveOffersErrorState(error.toString()));
+    }
+  }
+
+
+
 }

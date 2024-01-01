@@ -1,4 +1,4 @@
-class ProductModel{
+class CartModel{
 
   dynamic name;
   dynamic exclusiveOffers;
@@ -10,7 +10,7 @@ class ProductModel{
   dynamic price;
   dynamic review;
   dynamic weight;
-  ProductModel(
+  CartModel(
       this.name,
       this.exclusiveOffers,
       this.bestSelling,
@@ -24,7 +24,7 @@ class ProductModel{
       );
 
 
-  ProductModel.fromJson(Map<String, dynamic>? json){
+  CartModel.fromJson(Map<String, dynamic>? json){
     name = json?['name'];
     exclusiveOffers = json?['exclusiveOffers'];
     bestSelling = json?['bestSelling'];

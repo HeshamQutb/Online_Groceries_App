@@ -3,6 +3,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_groceries/models/best_selling_model.dart';
+import 'package:online_groceries/models/exclusive_offers_model.dart';
+import 'package:online_groceries/screens/best_selling_screen/best_selling_screen.dart';
+import 'package:online_groceries/screens/exclusive_offer_screen/exclusive_offers_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
@@ -29,7 +33,7 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget getHomePage(context, cubit) {
+  Widget getHomePage(context, GroceriesCubit cubit) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -40,126 +44,287 @@ class ShopScreen extends StatelessWidget {
               onTap: () {
                 cubit.changeNavBar(1);
               },
-              child: const ListTile(
-                leading: Icon(
-                  IconBroken.Search,
-                  color: Colors.black54,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                title: Text(
-                  'Search Store',
-                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                child: const ListTile(
+                  leading: Icon(
+                    IconBroken.Search,
+                    color: Colors.black54,
+                  ),
+                  title: Text(
+                    'Search Store',
+                    style: TextStyle(fontSize: 20, color: Colors.grey),
+                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 15,
             ),
-            CarouselSlider(
-              items: [
-                _buildImage(
-                    'https://as2.ftcdn.net/v2/jpg/03/20/46/13/1000_F_320461388_5Snqf6f2tRIqiWlaIzNWrCUm1Ocaqhfm.jpg'),
-                _buildImage(
-                    'https://as1.ftcdn.net/v2/jpg/04/14/51/80/1000_F_414518045_jxAaMA75UWWwHyTvMkS0GVMtqF56mFmM.jpg'),
-                _buildImage(
-                    'https://as1.ftcdn.net/v2/jpg/02/62/18/46/1000_F_262184611_bXhmboL9oE6k2ILu4qXxNWFhNJCEbTn2.jpg'),
-              ],
-              options: CarouselOptions(
-                height: 150,
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                viewportFraction: 1,
-                reverse: false,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 3),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
+            getBanners(),
             const SizedBox(
               height: 15,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Exclusive Offer',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'See all',
-                    style: TextStyle(color: defaultColor),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              color: Colors.white,
-              height: 200,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      navigateTo(context, const ItemScreen());
-                    },
-                    child: productBuilder()),
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 10,
-                ),
-                itemCount: 5,
-              ),
-            ),
+            getExclusiveOffersSection(context, cubit.offers),
             const SizedBox(
               height: 15,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Best Selling',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'See all',
-                    style: TextStyle(color: defaultColor),
-                  ),
-                ),
-              ],
+            getBestSellingSection(context),
+            const SizedBox(
+              height: 15,
             ),
-            Container(
-              color: Colors.white,
-              height: 200,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    navigateTo(context, const ItemScreen());
-                  },
-                  child: productBuilder(),
-                ),
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 10,
-                ),
-                itemCount: 5,
+            getGroceriesSection(context)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getBanners() {
+    return CarouselSlider(
+      items: [
+        _buildImage(
+            'https://as2.ftcdn.net/v2/jpg/03/20/46/13/1000_F_320461388_5Snqf6f2tRIqiWlaIzNWrCUm1Ocaqhfm.jpg'),
+        _buildImage(
+            'https://as1.ftcdn.net/v2/jpg/04/14/51/80/1000_F_414518045_jxAaMA75UWWwHyTvMkS0GVMtqF56mFmM.jpg'),
+        _buildImage(
+            'https://as1.ftcdn.net/v2/jpg/02/62/18/46/1000_F_262184611_bXhmboL9oE6k2ILu4qXxNWFhNJCEbTn2.jpg'),
+      ],
+      options: CarouselOptions(
+        height: 150,
+        initialPage: 0,
+        enableInfiniteScroll: true,
+        viewportFraction: 1,
+        reverse: false,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        scrollDirection: Axis.horizontal,
+      ),
+    );
+  }
+
+  Widget getExclusiveOffersSection(BuildContext context, List<ExclusiveModel> exclusiveModels) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Exclusive Offer',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                navigateTo(context, const ExclusiveOffersScreen());
+              },
+              child: const Text(
+                'See all',
+                style: TextStyle(color: defaultColor),
               ),
             ),
           ],
         ),
-      ),
+        Container(
+          color: Colors.white,
+          height: 200,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              final exclusiveModel =
+                  exclusiveModels[index];
+              return GestureDetector(
+                onTap: () {
+                  navigateTo(
+                      context, const ItemScreen()); // Pass model to screen
+                },
+                child: Container(
+                  height: 200,
+                  width: 150,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 0.2,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: 92,
+                          child: CachedNetworkImage(
+                            imageUrl: exclusiveModel.images,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(exclusiveModel.name ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 2),
+                        Text(exclusiveModel.weight.toString()  ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 80,
+                              height: 30,
+                              child: Text('\$ ${exclusiveModel.price.toString() ?? ''}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const Spacer(),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: defaultColor,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+            itemCount: exclusiveModels.length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getBestSellingSection(context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Best Selling',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                navigateTo(
+                  context,
+                  const BestSellingScreen(),
+                );
+              },
+              child: const Text(
+                'See all',
+                style: TextStyle(
+                  color: defaultColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          color: Colors.white,
+          height: 200,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () {
+                navigateTo(
+                  context,
+                  const ItemScreen(),
+                );
+              },
+              child: productBuilder(),
+            ),
+            separatorBuilder: (context, index) => const SizedBox(
+              width: 10,
+            ),
+            itemCount: 5,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getGroceriesSection(context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Groceries',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                'See all',
+                style: TextStyle(color: defaultColor),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          color: Colors.white,
+          height: 200,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () {
+                navigateTo(context, const ItemScreen(),);
+              },
+              child: productBuilder(),
+            ),
+            separatorBuilder: (context, index) => const SizedBox(
+              width: 10,
+            ),
+            itemCount: 5,
+          ),
+        ),
+      ],
     );
   }
 
@@ -229,17 +394,21 @@ class ShopScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: defaultColor,
-                          borderRadius: BorderRadius.circular(15)),
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: defaultColor,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Center(
                       child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.add,
-                            size: 28,
-                            color: Colors.white,
-                          )))
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.add,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -261,8 +430,6 @@ class ShopScreen extends StatelessWidget {
       ),
     );
   }
-
-
 
   Widget getShimmerLoading() {
     return Shimmer.fromColors(
@@ -290,8 +457,9 @@ class ShopScreen extends StatelessWidget {
                 height: 200,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20)),
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
               const SizedBox(height: 15),
               Row(
@@ -306,7 +474,7 @@ class ShopScreen extends StatelessWidget {
                     width: 40,
                     height: 20,
                     color: Colors.grey,
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -332,7 +500,7 @@ class ShopScreen extends StatelessWidget {
                     width: 40,
                     height: 20,
                     color: Colors.grey,
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -358,7 +526,7 @@ class ShopScreen extends StatelessWidget {
                     width: 40,
                     height: 20,
                     color: Colors.grey,
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -379,5 +547,3 @@ class ShopScreen extends StatelessWidget {
     );
   }
 }
-
-

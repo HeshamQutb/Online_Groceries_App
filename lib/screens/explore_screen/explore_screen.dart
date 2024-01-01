@@ -90,25 +90,34 @@ class ExploreScreen extends StatelessWidget {
   }
 
   Widget getSearch(searchController) {
-    return TextField(
-      autofocus: true,
-      controller: searchController,
-      onChanged: (value) {},
-      keyboardType: TextInputType.text,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-        prefixIcon: Icon(
-          IconBroken.Search,
-          size: 23,
-          color: Colors.black54,
-        ),
-        hintText: 'Search store',
-        hintStyle: TextStyle(
-          color: Colors.grey,
-          fontSize: 20,
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Center(
+        child: TextField(
+          autofocus: true,
+          controller: searchController,
+          onChanged: (value) {},
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+            prefixIcon: Icon(
+              IconBroken.Search,
+              size: 23,
+              color: Colors.black54,
+            ),
+            hintText: 'Search store',
+            hintStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: 20,
+            ),
+          ),
         ),
       ),
     );

@@ -25,3 +25,13 @@ class GetProductsErrorState extends GroceriesStates{
   final String error;
   GetProductsErrorState(this.error);
 }
+
+// Exclusive offers
+class GetExclusiveOffersLoadingState extends GroceriesStates{}
+
+class GetExclusiveOffersSuccessState extends GroceriesStates{}
+
+class GetExclusiveOffersErrorState extends GroceriesStates{
+  final String error;
+  GetExclusiveOffersErrorState(this.error);
+}
