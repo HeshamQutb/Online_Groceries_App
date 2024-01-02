@@ -15,15 +15,15 @@ A new Flutter project.
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/8febb638-0315-43c0-9212-19a4f376bce3" width="260" />
 </div>
 
-<div style="display:flex;flex-wrap:wrap;">    
+<div style="display:flex;flex-wrap:wrap;"> 
+    <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/2a7dd451-17a0-4a26-942f-000e80bedaa2" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/a22567c7-be58-499e-a179-a6ffa5456a1c" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/26304520-8448-41a8-8759-257d24483b27" width="260" />
-    <img src="" width="260" />
 </div>
 
 <div style="display:flex;flex-wrap:wrap;">    
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/e7e4e64f-cb53-459c-95e2-93569bd14786" width="260" />
-    <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/2a7dd451-17a0-4a26-942f-000e80bedaa2" width="260" />
+    <img src="" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/bd6cc077-26d1-4945-847d-4da51c5bc287" width="250" />
 </div>
 
