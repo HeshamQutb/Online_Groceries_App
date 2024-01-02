@@ -22,16 +22,11 @@ A new Flutter project.
 </div>
 
 <div style="display:flex;flex-wrap:wrap;">    
-    <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/e7e4e64f-cb53-459c-95e2-93569bd14786" width="260" />
-    <img src="" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/bd6cc077-26d1-4945-847d-4da51c5bc287" width="250" />
-</div>
-
-<div style="display:flex;flex-wrap:wrap;">    
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/970d6cfd-18b3-4c8a-ba84-440d8b869f6a" width="260" />
-    <img src="" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/49139e34-a3c1-4000-b3f4-31c8bd126be1" width="250" />
 </div>
+
 
 ## Getting Started
 
