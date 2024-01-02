@@ -1,8 +1,18 @@
-# online_groceries
+# Flutter Online Groceries App
 
-A new Flutter project.
+Welcome to our Flutter Online Groceries App! This mobile application is built using Flutter and designed to provide a seamless shopping experience for purchasing groceries online.
 
 
+## Features
+
+- **User Authentication**: Secure user registration and login functionality.
+- **Product Catalog**: Browse various grocery items with categories and details.
+- **Product Details**: View detailed information, including price, description, and reviews.
+- **Shopping Cart**: Add, edit, and remove items in the cart before checkout.
+- **Checkout Process**: Secure and straightforward payment gateway integration.
+- **Search Functionality**: Search for specific products easily.
+
+## Screenshots
 <div style="display:flex;flex-wrap:wrap;">
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/55b7dc32-490e-4d6f-9ae7-5ce00daacd36" width="260" />
     <img src="https://github.com/HeshamQutb/Online_Groceries_App/assets/81641524/2683991d-a192-4554-bd5a-fb4eabfd4837" width="260" />
