@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../components/components.dart';
 import '../../layout/root_layout.dart';
-import '../../shared/components/components.dart';
 import '../../shared/styles/icon_broken.dart';
 import 'otp_cubit/cubit.dart';
 import 'otp_cubit/states.dart';

@@ -7,11 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/screens/register/register_cubit/cubit.dart';
 import 'package:online_groceries/screens/register/register_cubit/states.dart';
+import 'package:online_groceries/shared/styles/colors.dart';
 
+import '../../components/constants.dart';
 import '../../layout/root_layout.dart';
-import '../../shared/components/components.dart';
-import '../../shared/components/constants.dart';
+import '../../components/components.dart';
 import '../../shared/network/local/cache_helper.dart';
+import '../../shared/styles/icon_broken.dart';
 import '../login_screen/login_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -25,6 +27,7 @@ class RegisterScreen extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ),
     );
+
     var nameController = TextEditingController();
     var phoneController = TextEditingController();
     var emailController = TextEditingController();
@@ -36,21 +39,22 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state) {
           if (state is CreateUserSuccessState) {
-            FirebaseAuth.instance.currentUser?.sendEmailVerification().then((value)
-            {
+            FirebaseAuth.instance.currentUser
+                ?.sendEmailVerification()
+                .then((value) {
               navigateTo(context, const Verification());
               print(FirebaseAuth.instance.currentUser?.email);
               showToast(message: 'Check your mail', state: ToastState.success);
-            }).catchError((error)
-            {
+            }).catchError((error) {
               showToast(message: error.toString(), state: ToastState.error);
             });
           }
-          if(state is RegisterErrorState){
+          if (state is RegisterErrorState) {
             showToast(message: state.error.toString(), state: ToastState.error);
           }
         },
         builder: (context, state) {
+          var profileImage = RegisterCubit.get(context).profileImage;
           var cubit = RegisterCubit.get(context);
           return Scaffold(
             appBar: AppBar(),
@@ -84,6 +88,85 @@ class RegisterScreen extends StatelessWidget {
                                     .bodyLarge
                                     ?.copyWith(color: Colors.grey),
                               ),
+                              const SizedBox(
+                                height: 15.0,
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  showModalBottomSheet(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SizedBox(
+                                        height: 140,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
+                                              leading: const Icon(IconBroken.Camera),
+                                              title: const Text('Take a photo'),
+                                              onTap: () {
+                                                cubit.getProfileImageCamera();
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              height: 0.5,
+                                              color: Colors.grey,
+                                            ),
+                                            ListTile(
+                                              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                                              leading: const Icon(IconBroken.Image),
+                                              title: const Text('Choose from gallery'),
+                                              onTap: () {
+                                                cubit.getProfileImageGallery();
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              height: 0.5,
+                                              color: Colors.grey,
+                                            ),
+                                            defaultTextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                text: 'Cancel',
+                                                size: 15
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Stack(
+                                  alignment: AlignmentDirectional.bottomCenter,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: defaultColor,
+                                      radius: 40,
+                                      backgroundImage:profileImage == null
+                                          ? const AssetImage('assets/images/user.png')
+                                          : FileImage(profileImage) as ImageProvider,
+                                    ),
+                                    const CircleAvatar(
+                                      backgroundColor: defaultColor,
+                                      radius: 10,
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 18,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -176,13 +259,13 @@ class RegisterScreen extends StatelessWidget {
                                     name: nameController.text,
                                     phone: phoneController.text,
                                   );
-                                  FirebaseAuth.instance.currentUser?.sendEmailVerification().then((value)
-                                  {
-                                    showToast(message: 'Check your mail', state: ToastState.success);
-                                  }).catchError((error)
-                                  {
-
-                                  });
+                                  FirebaseAuth.instance.currentUser
+                                      ?.sendEmailVerification()
+                                      .then((value) {
+                                    showToast(
+                                        message: 'Check your mail',
+                                        state: ToastState.success);
+                                  }).catchError((error) {});
                                 }
                               },
                               text: 'register',
@@ -222,11 +305,6 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-
-
-
-
-
 class Verification extends StatefulWidget {
   const Verification({super.key});
 
@@ -240,90 +318,83 @@ class _VerificationState extends State<Verification> {
     return BlocProvider(
       create: (context) => RegisterCubit(),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
-        listener: (context, state) {
-
-      },
-        builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'We have sent a verification email to:',
-                  style: TextStyle(
-                    fontSize: 18
-                  ),
-                ),
-                Text(
-                  '${FirebaseAuth.instance.currentUser?.email}',
-                  style: const TextStyle(
-                      fontSize: 18
-                  ),),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'click the link in your email to verify your account',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey
-                  ),),
-                const SizedBox(
-                  height: 10,
-                ),
-                defaultButton(
-                    function: () async {
-                      await FirebaseAuth.instance.currentUser?.reload();
-                      if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
-                        CacheHelper.setData
-                          (
-                          key: 'uId',
-                          value:FirebaseAuth.instance.currentUser?.uid,
-                        ).then((value) {
-                          navigateAndFinish(context, const RootLayout());
-
-                        });
-                        showToast(
-                            message: 'Verified successfully',
-                            state: ToastState.success
-                        );
-                        setState(() {
-                          uId = CacheHelper.getData(key: 'uId');
-                        });
-                      }
-                    },
-                    text: 'continue',isUpperCase: true
-                ),
-                Row(
+          listener: (context, state) {},
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'If you can\'t find it',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey
-                      ),),
-                    defaultTextButton(
-                        onPressed: () {
-                          FirebaseAuth.instance.currentUser?.sendEmailVerification().then((value)
-                          {
-                            showToast(message: 'Check your mail', state: ToastState.success);
-                          }).catchError((error)
-                          {
-                            print(error.toString());
-                          });
-                        }, text: 'click here to resend')
+                      'We have sent a verification email to:',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      '${FirebaseAuth.instance.currentUser?.email}',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      'click the link in your email to verify your account',
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    defaultButton(
+                        function: () async {
+                          await FirebaseAuth.instance.currentUser?.reload();
+                          if (FirebaseAuth
+                                  .instance.currentUser!.emailVerified ==
+                              true) {
+                            CacheHelper.setData(
+                              key: 'uId',
+                              value: FirebaseAuth.instance.currentUser?.uid,
+                            ).then((value) {
+                              navigateAndFinish(context, const RootLayout());
+                            });
+                            showToast(
+                                message: 'Verified successfully',
+                                state: ToastState.success);
+                            setState(() {
+                              uId = CacheHelper.getData(key: 'uId');
+                            });
+                          }
+                        },
+                        text: 'continue',
+                        isUpperCase: true),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'If you can\'t find it',
+                          style: TextStyle(fontSize: 15, color: Colors.grey),
+                        ),
+                        defaultTextButton(
+                            onPressed: () {
+                              FirebaseAuth.instance.currentUser
+                                  ?.sendEmailVerification()
+                                  .then((value) {
+                                showToast(
+                                    message: 'Check your mail',
+                                    state: ToastState.success);
+                              }).catchError((error) {
+                                print(error.toString());
+                              });
+                            },
+                            text: 'click here to resend')
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        );
-      }),
+              ),
+            );
+          }),
     );
   }
 }

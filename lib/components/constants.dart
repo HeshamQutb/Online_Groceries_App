@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import '../../screens/login_screen/login_screen.dart';
-import '../network/local/cache_helper.dart';
+import '../shared/network/local/cache_helper.dart';
 import 'components.dart';
 
 void signOut(context){

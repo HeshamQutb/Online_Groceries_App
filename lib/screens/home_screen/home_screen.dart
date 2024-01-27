@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/models/best_selling_model.dart';
 import 'package:online_groceries/models/exclusive_offers_model.dart';
-import 'package:online_groceries/screens/best_selling_screen/best_selling_screen.dart';
 import 'package:online_groceries/screens/exclusive_offer_screen/exclusive_offers_screen.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../components/components.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
-import '../../shared/components/components.dart';
+import '../../models/groceries_model.dart';
 import '../../shared/styles/colors.dart';
 import '../../shared/styles/icon_broken.dart';
 import '../item_screen/item_screen.dart';
@@ -25,7 +25,7 @@ class ShopScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
         return ConditionalBuilder(
-          condition: true,
+          condition: state is! GetExclusiveOffersLoadingState,
           builder: (BuildContext context) => getHomePage(context, cubit),
           fallback: (BuildContext context) => getShimmerLoading(),
         );
@@ -72,11 +72,11 @@ class ShopScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            getBestSellingSection(context),
+            getBestSellingSection(context, cubit.bestSelling),
             const SizedBox(
               height: 15,
             ),
-            getGroceriesSection(context)
+            getGroceriesSection(context, cubit.groceries)
           ],
         ),
       ),
@@ -108,7 +108,8 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget getExclusiveOffersSection(BuildContext context, List<ExclusiveModel> exclusiveModels) {
+  Widget getExclusiveOffersSection(
+      BuildContext context, List<ExclusiveModel> exclusiveModels) {
     return Column(
       children: [
         Row(
@@ -140,12 +141,18 @@ class ShopScreen extends StatelessWidget {
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
-              final exclusiveModel =
-                  exclusiveModels[index];
+              final exclusiveModel = exclusiveModels[index];
               return GestureDetector(
                 onTap: () {
                   navigateTo(
-                      context, const ItemScreen()); // Pass model to screen
+                      context,
+                      ItemScreen(
+                        weight: exclusiveModel.weight.toString(),
+                        name: exclusiveModel.name,
+                        price: exclusiveModel.price.toString(),
+                        details: exclusiveModel.details,
+                        images: exclusiveModel.images,
+                      )); // Pass model to screen
                 },
                 child: Container(
                   height: 200,
@@ -177,7 +184,7 @@ class ShopScreen extends StatelessWidget {
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 2),
-                        Text(exclusiveModel.weight.toString()  ?? '',
+                        Text(exclusiveModel.weight.toString(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(color: Colors.grey)),
@@ -188,7 +195,8 @@ class ShopScreen extends StatelessWidget {
                             SizedBox(
                               width: 80,
                               height: 30,
-                              child: Text('\$ ${exclusiveModel.price.toString() ?? ''}',
+                              child: Text(
+                                  '\$ ${exclusiveModel.price.toString()}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -228,7 +236,8 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget getBestSellingSection(context) {
+  Widget getBestSellingSection(
+      BuildContext context, List<BestSellingModel> bestSellingModels) {
     return Column(
       children: [
         Row(
@@ -243,61 +252,8 @@ class ShopScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                navigateTo(
-                  context,
-                  const BestSellingScreen(),
-                );
+                navigateTo(context, const ExclusiveOffersScreen());
               },
-              child: const Text(
-                'See all',
-                style: TextStyle(
-                  color: defaultColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Container(
-          color: Colors.white,
-          height: 200,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                navigateTo(
-                  context,
-                  const ItemScreen(),
-                );
-              },
-              child: productBuilder(),
-            ),
-            separatorBuilder: (context, index) => const SizedBox(
-              width: 10,
-            ),
-            itemCount: 5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget getGroceriesSection(context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Groceries',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
               child: const Text(
                 'See all',
                 style: TextStyle(color: defaultColor),
@@ -312,16 +268,223 @@ class ShopScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                navigateTo(context, const ItemScreen(),);
+            itemBuilder: (context, index) {
+              final bestSelling = bestSellingModels[index];
+              return GestureDetector(
+                onTap: () {
+                  navigateTo(
+                      context,
+                      ItemScreen(
+                        weight: bestSelling.weight.toString(),
+                        name: bestSelling.name,
+                        price: bestSelling.price.toString(),
+                        details: bestSelling.details,
+                        images: bestSelling.images,
+                      )); // Pass model to screen
+                },
+                child: Container(
+                  height: 200,
+                  width: 150,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 0.2,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: 92,
+                          child: CachedNetworkImage(
+                            imageUrl: bestSelling.images,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(bestSelling.name ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 2),
+                        Text(bestSelling.weight.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 80,
+                              height: 30,
+                              child: Text('\$ ${bestSelling.price.toString()}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const Spacer(),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: defaultColor,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+            itemCount: bestSellingModels.length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getGroceriesSection(
+      BuildContext context, List<GroceriesModel> groceriesModels) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Groceries',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                navigateTo(context, const ExclusiveOffersScreen());
               },
-              child: productBuilder(),
+              child: const Text(
+                'See all',
+                style: TextStyle(color: defaultColor),
+              ),
             ),
-            separatorBuilder: (context, index) => const SizedBox(
-              width: 10,
-            ),
-            itemCount: 5,
+          ],
+        ),
+        Container(
+          color: Colors.white,
+          height: 200,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              final groceriesModel = groceriesModels[index];
+              return GestureDetector(
+                onTap: () {
+                  navigateTo(
+                      context,
+                      ItemScreen(
+                        weight: groceriesModel.weight.toString(),
+                        name: groceriesModel.name,
+                        price: groceriesModel.price.toString(),
+                        details: groceriesModel.details,
+                        images: groceriesModel.images,
+                      )); // Pass model to screen
+                },
+                child: Container(
+                  height: 200,
+                  width: 150,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 0.2,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: 92,
+                          child: CachedNetworkImage(
+                            imageUrl: groceriesModel.images,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(groceriesModel.name ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 2),
+                        Text(groceriesModel.weight.toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 80,
+                              height: 30,
+                              child: Text(
+                                  '\$ ${groceriesModel.price.toString()}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const Spacer(),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: defaultColor,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 25,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+            itemCount: groceriesModels.length,
           ),
         ),
       ],

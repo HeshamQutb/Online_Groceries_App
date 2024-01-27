@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_groceries/shared/components/components.dart';
 import 'package:online_groceries/shared/styles/colors.dart';
+import '../../components/components.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 import '../../shared/styles/icon_broken.dart';

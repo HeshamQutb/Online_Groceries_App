@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../styles/colors.dart';
-import '../styles/icon_broken.dart';
+
+import '../shared/styles/colors.dart';
+import '../shared/styles/icon_broken.dart';
+
 
 
 MaterialColor createCustomMaterialColor(Color color) {

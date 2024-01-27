@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_groceries/screens/splash_screen/splash_screen.dart';
 import 'package:online_groceries/shared/bloc_observer.dart';
-import 'package:online_groceries/shared/components/constants.dart';
 import 'package:online_groceries/shared/cubit/App/cubit.dart';
 import 'package:online_groceries/shared/cubit/App/states.dart';
 import 'package:online_groceries/shared/network/local/cache_helper.dart';
 import 'package:online_groceries/shared/styles/theme.dart';
 
+import 'components/constants.dart';
 import 'firebase_options.dart';
 import 'layout/cubit/cubit.dart';
 

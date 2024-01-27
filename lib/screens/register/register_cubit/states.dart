@@ -24,3 +24,12 @@ class CreateUserErrorState extends RegisterStates{
 }
 
 class RegisterChangePasswordVisibilityState extends RegisterStates{}
+
+
+class GetUserImageSuccessState extends RegisterStates{}
+
+class GetUserImageErrorState extends RegisterStates{}
+
+class UploadUserImageSuccessState extends RegisterStates{}
+
+class UploadUserImageErrorState extends RegisterStates{}

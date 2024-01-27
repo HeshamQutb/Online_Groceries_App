@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../components/components.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
-import '../../shared/components/components.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});

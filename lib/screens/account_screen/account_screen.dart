@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_groceries/shared/components/constants.dart';
 import 'package:online_groceries/shared/styles/colors.dart';
 
+import '../../components/constants.dart';
 import '../../layout/cubit/cubit.dart';
 import '../../layout/cubit/states.dart';
 

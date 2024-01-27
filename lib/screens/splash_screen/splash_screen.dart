@@ -10,12 +10,14 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ),
     );
+
     return BlocProvider(
       create: (context) => GroceriesCubit()..splashScreen(context),
       child: BlocConsumer<GroceriesCubit, GroceriesStates>(
