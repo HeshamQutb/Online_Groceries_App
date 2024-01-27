@@ -16,7 +16,9 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroceriesCubit, GroceriesStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
 
@@ -79,7 +81,7 @@ class ExploreScreen extends StatelessWidget {
           return const Text("Something went wrong");
         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
           );
