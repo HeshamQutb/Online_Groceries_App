@@ -12,17 +12,17 @@ import '../../shared/styles/colors.dart';
 import '../../shared/styles/icon_broken.dart';
 
 class ItemScreen extends StatelessWidget {
-  const ItemScreen({
-    super.key,
-    required this.name,
-    required this.details,
-    required this.images,
-    required this.price,
-    required this.review,
-    required this.weight,
-    required this.category,
-    required this.quantity,
-  });
+  const ItemScreen(
+      {super.key,
+      required this.name,
+      required this.details,
+      required this.images,
+      required this.price,
+      required this.review,
+      required this.weight,
+      required this.category,
+      required this.quantity,
+      this.onPop});
   final dynamic name;
   final dynamic details;
   final dynamic images;
@@ -31,21 +31,27 @@ class ItemScreen extends StatelessWidget {
   final dynamic weight;
   final dynamic category;
   final dynamic quantity;
+  final Function? onPop;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroceriesCubit, GroceriesStates>(
       listener: (context, state) {
-        if(state is AddFavouritesSuccessState){
-          showToast(message: 'Successfully Add to Favorites', state: ToastState.success);
+        if (state is AddFavouritesSuccessState) {
+          showToast(
+              message: 'Successfully Add to Favorites',
+              state: ToastState.success);
         }
-        if(state is RemoveFromFavoritesSuccessState){
-          showToast(message: 'Successfully Remove from Favorites', state: ToastState.warning);
+        if (state is RemoveFromFavoritesSuccessState) {
+          showToast(
+              message: 'Successfully Remove from Favorites',
+              state: ToastState.warning);
         }
       },
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
         bool isInFavorites = cubit.isInFavorites(name);
-        
+
         if (state is! GetFavouritesSuccessState) {
           cubit.getFavourites();
         }
@@ -53,6 +59,10 @@ class ItemScreen extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
+                cubit.getFavourites();
+                if (onPop != null) {
+                  onPop!();
+                }
                 Navigator.pop(context);
               },
               icon: const Icon(IconBroken.Arrow___Left_2),
@@ -62,7 +72,7 @@ class ItemScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -200,7 +210,7 @@ class ItemScreen extends StatelessWidget {
                         allowHalfRating: true,
                         itemCount: 5,
                         itemPadding:
-                            const EdgeInsets.symmetric(horizontal: 1.0),
+                        const EdgeInsets.symmetric(horizontal: 1.0),
                         itemBuilder: (context, _) => const Icon(
                           Icons.star,
                           color: Colors.redAccent,
@@ -219,7 +229,10 @@ class ItemScreen extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-                  defaultButton(function: () {}, text: 'Add To Card')
+                  defaultButton(
+                    function: () {},
+                    text: 'Add To Card',
+                  ),
                 ],
               ),
             ),
@@ -265,4 +278,6 @@ class ItemScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }

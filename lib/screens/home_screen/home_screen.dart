@@ -25,7 +25,7 @@ class ShopScreen extends StatelessWidget {
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
         return ConditionalBuilder(
-          condition: state is! GetExclusiveOffersLoadingState,
+          condition: state is! GetGroceriesLoadingState,
           builder: (BuildContext context) => getHomePage(context, cubit),
           fallback: (BuildContext context) => getShimmerLoading(),
         );
@@ -500,6 +500,21 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildImage(String imageUrl) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+      ),
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
   Widget productBuilder() => Container(
         height: 200,
         width: 150,
@@ -516,21 +531,21 @@ class ShopScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // CachedNetworkImage(
-              //   imageUrl: productModel.images,
-              //   fit: BoxFit.fill,
-              // ),
               Center(
-                child: SizedBox(
-                    height: 90,
-                    width: 90,
-                    child: Image.asset('assets/images/otp.jpg')),
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
               const SizedBox(
-                height: 2,
+                height: 5,
               ),
               const Text(
-                'product_name',
+                'name',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -541,7 +556,7 @@ class ShopScreen extends StatelessWidget {
                 height: 2,
               ),
               const Text(
-                'product_weight',
+                'weight',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.grey),
@@ -556,7 +571,7 @@ class ShopScreen extends StatelessWidget {
                     width: 80,
                     height: 30,
                     child: Text(
-                      '\$ product_price',
+                      '\$ price',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -587,22 +602,6 @@ class ShopScreen extends StatelessWidget {
           ),
         ),
       );
-
-  Widget _buildImage(String imageUrl) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
-      ),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
-
   Widget getShimmerLoading() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
@@ -638,18 +637,24 @@ class ShopScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 120,
                     height: 20,
-                    color: Colors.grey,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 40,
                     height: 20,
-                    color: Colors.grey,
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -664,18 +669,24 @@ class ShopScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 120,
                     height: 20,
-                    color: Colors.grey,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 40,
                     height: 20,
-                    color: Colors.grey,
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -690,18 +701,24 @@ class ShopScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 120,
                     height: 20,
-                    color: Colors.grey,
                   ),
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey,
+                    ),
                     width: 40,
                     height: 20,
-                    color: Colors.grey,
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
