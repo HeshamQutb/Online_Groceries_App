@@ -5,14 +5,18 @@ class ExclusiveModel{
   dynamic images;
   dynamic price;
   dynamic category;
+  dynamic review;
   dynamic weight;
+  dynamic quantity;
   ExclusiveModel(
       this.name,
       this.details,
       this.images,
       this.price,
       this.category,
+      this.review,
       this.weight,
+      this.quantity,
       );
 
 
@@ -22,7 +26,9 @@ class ExclusiveModel{
     images = json?['images'];
     price = json?['price'];
     category = json?['category'];
+    review = json?['review'];
     weight = json?['weight'];
+    quantity = json?['quantity'];
   }
 
   Map<String, dynamic> toMap(){
@@ -32,7 +38,9 @@ class ExclusiveModel{
       'images':images,
       'price':price,
       'category':category,
+      'review':review,
       'weight':weight,
+      'quantity':quantity,
     };
 }
 }

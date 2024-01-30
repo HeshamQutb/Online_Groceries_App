@@ -84,6 +84,9 @@ class CategoryScreen extends StatelessWidget {
                       price: filteredGrocery.price.toString(),
                       details: filteredGrocery.details,
                       images: filteredGrocery.images,
+                      review: filteredGrocery.review,
+                      category: filteredGrocery.category,
+                      quantity: filteredGrocery.quantity,
                     ),
                   ); // Pass model to screen
                 },

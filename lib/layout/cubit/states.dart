@@ -61,20 +61,50 @@ class GetFilteredGroceriesErrorState extends GroceriesStates{
 
 
 // Search
-class GetSearchGroceriesSuccessState extends GroceriesStates {
-  final List<GroceriesModel> groceries;
-
-  GetSearchGroceriesSuccessState(this.groceries);
-}
 
 class SearchSuccessState extends GroceriesStates {}
 
-
-class GroceriesErrorState extends GroceriesStates {
+class SearchErrorState extends GroceriesStates {
   final String error;
-  GroceriesErrorState(this.error);
+  SearchErrorState(this.error);
 }
 
 class GroceriesLoadedState extends GroceriesStates {
   GroceriesLoadedState(List<GroceriesModel> groceries);
 }
+
+
+// Add to Favourites
+class AddFavouritesLoadingState extends GroceriesStates{}
+
+class AddFavouritesSuccessState extends GroceriesStates{}
+
+class AddFavouritesErrorState extends GroceriesStates{
+  final String error;
+  AddFavouritesErrorState(this.error);
+}
+
+// get Favourites
+class GetFavouritesLoadingState extends GroceriesStates{}
+
+class GetFavouritesSuccessState extends GroceriesStates{}
+
+class GetFavouritesErrorState extends GroceriesStates{
+  final String error;
+  GetFavouritesErrorState(this.error);
+}
+
+
+// get Favourites
+
+class RemoveFromFavoritesLoadingState extends GroceriesStates{}
+
+class RemoveFromFavoritesSuccessState extends GroceriesStates{}
+
+class RemoveFromFavoritesErrorState extends GroceriesStates{
+  final String error;
+  RemoveFromFavoritesErrorState(this.error);
+}
+
+
+

@@ -105,6 +105,9 @@ class ExploreScreen extends StatelessWidget {
                       price: selectedData!['price'].toString(),
                       details: selectedData['details'],
                       images: selectedData['images'],
+                      review: selectedData['review'],
+                      quantity: selectedData['quantity'],
+                      category: selectedData['category'],
                     ),
                   );
                 },

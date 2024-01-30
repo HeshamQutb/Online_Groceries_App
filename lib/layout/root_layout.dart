@@ -11,7 +11,7 @@ class RootLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GroceriesCubit()..getExclusiveOffers()..getBestSelling()..getGroceries(),
+      create: (context) => GroceriesCubit()..getExclusiveOffers()..getBestSelling()..getGroceries()..getFavourites(),
       child: BlocConsumer<GroceriesCubit, GroceriesStates>(
         listener: (context, state) {
           // TODO: implement listener

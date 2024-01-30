@@ -1,54 +1,46 @@
 class CartModel{
 
   dynamic name;
-  dynamic exclusiveOffers;
-  dynamic bestSelling;
-  dynamic card;
   dynamic details;
-  dynamic favorite;
   dynamic images;
   dynamic price;
   dynamic review;
+  dynamic category;
   dynamic weight;
+  dynamic quantity;
   CartModel(
       this.name,
-      this.exclusiveOffers,
-      this.bestSelling,
-      this.card,
       this.details,
-      this.favorite,
       this.images,
       this.price,
       this.review,
+      this.category,
       this.weight,
+      this.quantity,
       );
 
 
   CartModel.fromJson(Map<String, dynamic>? json){
     name = json?['name'];
-    exclusiveOffers = json?['exclusiveOffers'];
-    bestSelling = json?['bestSelling'];
-    card = json?['card'];
     details = json?['details'];
-    favorite = json?['favorite'];
     images = json?['images'];
     price = json?['price'];
     review = json?['review'];
+    category = json?['category'];
     weight = json?['weight'];
+    quantity = json?['quantity'];
   }
 
   Map<String, dynamic> toMap(){
     return{
       'name':name,
-      'exclusiveOffers':exclusiveOffers,
-      'bestSelling':bestSelling,
-      'card':card,
       'details':details,
-      'favorite':favorite,
       'images':images,
       'price':price,
       'review':review,
+      'category':category,
       'weight':weight,
+      'quantity':quantity,
     };
 }
 }

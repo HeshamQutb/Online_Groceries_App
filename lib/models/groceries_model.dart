@@ -4,8 +4,10 @@ class GroceriesModel{
   dynamic details;
   dynamic images;
   dynamic price;
+  dynamic category;
   dynamic review;
   dynamic weight;
+  dynamic quantity;
   GroceriesModel(
       this.name,
       this.details,
@@ -13,6 +15,7 @@ class GroceriesModel{
       this.price,
       this.review,
       this.weight,
+      this.quantity,
       );
 
 
@@ -23,6 +26,7 @@ class GroceriesModel{
     price = json?['price'];
     review = json?['review'];
     weight = json?['weight'];
+    quantity = json?['quantity'];
   }
 
   Map<String, dynamic> toMap(){
@@ -33,6 +37,7 @@ class GroceriesModel{
       'price':price,
       'review':review,
       'weight':weight,
+      'quantity':quantity,
     };
 }
 }

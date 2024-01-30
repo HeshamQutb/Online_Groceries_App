@@ -147,11 +147,14 @@ class ShopScreen extends StatelessWidget {
                   navigateTo(
                       context,
                       ItemScreen(
-                        weight: exclusiveModel.weight.toString(),
-                        name: exclusiveModel.name,
-                        price: exclusiveModel.price.toString(),
+                        category: exclusiveModel.category,
                         details: exclusiveModel.details,
                         images: exclusiveModel.images,
+                        name: exclusiveModel.name,
+                        price: exclusiveModel.price.toString(),
+                        quantity: exclusiveModel.quantity,
+                        review: exclusiveModel.review,
+                        weight: exclusiveModel.weight.toString(),
                       )); // Pass model to screen
                 },
                 child: Container(
@@ -275,11 +278,14 @@ class ShopScreen extends StatelessWidget {
                   navigateTo(
                       context,
                       ItemScreen(
-                        weight: bestSelling.weight.toString(),
-                        name: bestSelling.name,
-                        price: bestSelling.price.toString(),
+                        category: bestSelling.category,
                         details: bestSelling.details,
                         images: bestSelling.images,
+                        name: bestSelling.name,
+                        price: bestSelling.price.toString(),
+                        quantity: bestSelling.quantity,
+                        review: bestSelling.review,
+                        weight: bestSelling.weight.toString(),
                       )); // Pass model to screen
                 },
                 child: Container(
@@ -407,6 +413,9 @@ class ShopScreen extends StatelessWidget {
                         price: groceriesModel.price.toString(),
                         details: groceriesModel.details,
                         images: groceriesModel.images,
+                        review: groceriesModel.review,
+                        quantity: groceriesModel.quantity,
+                        category: groceriesModel.category,
                       )); // Pass model to screen
                 },
                 child: Container(

@@ -14,22 +14,41 @@ import '../../shared/styles/icon_broken.dart';
 class ItemScreen extends StatelessWidget {
   const ItemScreen({
     super.key,
-    required this.weight,
     required this.name,
-    required this.price,
     required this.details,
     required this.images,
+    required this.price,
+    required this.review,
+    required this.weight,
+    required this.category,
+    required this.quantity,
   });
-  final String weight;
-  final String name;
-  final String price;
-  final String details;
-  final String images;
+  final dynamic name;
+  final dynamic details;
+  final dynamic images;
+  final dynamic price;
+  final dynamic review;
+  final dynamic weight;
+  final dynamic category;
+  final dynamic quantity;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroceriesCubit, GroceriesStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is AddFavouritesSuccessState){
+          showToast(message: 'Successfully Add to Favorites', state: ToastState.success);
+        }
+        if(state is RemoveFromFavoritesSuccessState){
+          showToast(message: 'Successfully Remove from Favorites', state: ToastState.warning);
+        }
+      },
       builder: (context, state) {
+        var cubit = GroceriesCubit.get(context);
+        bool isInFavorites = cubit.isInFavorites(name);
+        
+        if (state is! GetFavouritesSuccessState) {
+          cubit.getFavourites();
+        }
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -68,9 +87,24 @@ class ItemScreen extends StatelessWidget {
                         ],
                       ),
                       const Spacer(),
-                      GestureDetector(
-                          onTap: () {},
-                          child: const Icon(Icons.favorite_border))
+                      InkWell(
+                        onTap: () {
+                          cubit.addToFavorites(
+                            name: name,
+                            details: details,
+                            images: images,
+                            price: price,
+                            review: review,
+                            category: category,
+                            weight: weight,
+                            quantity: quantity,
+                          );
+                        },
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: isInFavorites ? Colors.red : Colors.grey,
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -83,9 +117,9 @@ class ItemScreen extends StatelessWidget {
                         icon: const Icon(Icons.remove),
                         color: Colors.grey,
                       ),
-                      const Text(
-                        '1',
-                        style: TextStyle(fontSize: 20),
+                      Text(
+                        quantity.toString(),
+                        style: const TextStyle(fontSize: 20),
                       ),
                       IconButton(
                         onPressed: () {},
@@ -135,9 +169,9 @@ class ItemScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 15),
                       ),
                       const Spacer(),
-                      const Text(
-                        '100gr',
-                        style: TextStyle(fontSize: 8, color: Colors.grey),
+                      Text(
+                        weight,
+                        style: const TextStyle(fontSize: 8, color: Colors.grey),
                       ),
                       const SizedBox(
                         width: 5,
