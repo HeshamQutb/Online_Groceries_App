@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
           if (state is LoginErrorState) {
-            showToast(message: state.error, state: ToastState.error);
+            showToast(message: 'It seems like you haven\'t registered yet.', state: ToastState.error);
           }
           if (state is LoginSuccessState) {
             CacheHelper.setData(

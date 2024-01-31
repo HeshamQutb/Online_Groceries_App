@@ -15,13 +15,38 @@ import '../../shared/styles/colors.dart';
 import '../../shared/styles/icon_broken.dart';
 import '../item_screen/item_screen.dart';
 
-class ShopScreen extends StatelessWidget {
+class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
 
   @override
+  State<ShopScreen> createState() => _ShopScreenState();
+}
+
+class _ShopScreenState extends State<ShopScreen> {
+  @override
+  void initState() {
+    super.initState();
+    GroceriesCubit.get(context).getBestSelling();
+    GroceriesCubit.get(context).getExclusiveOffers();
+    GroceriesCubit.get(context).getGroceries();
+    GroceriesCubit.get(context).getFavourites();
+    GroceriesCubit.get(context).getCart();
+  }
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroceriesCubit, GroceriesStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AddCartSuccessState) {
+          showToast(
+              message: 'Successfully Add to Cart',
+              state: ToastState.success);
+        }
+        if (state is RemoveFromCartSuccessState) {
+          showToast(
+              message: 'Successfully Remove from Cart',
+              state: ToastState.warning);
+        }
+      },
       builder: (context, state) {
         var cubit = GroceriesCubit.get(context);
         return ConditionalBuilder(
@@ -33,7 +58,7 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget getHomePage(context, GroceriesCubit cubit) {
+  Widget getHomePage(context, cubit) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -68,15 +93,15 @@ class ShopScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            getExclusiveOffersSection(context, cubit.offers),
+            getExclusiveOffersSection(context, cubit.offers, cubit),
             const SizedBox(
               height: 15,
             ),
-            getBestSellingSection(context, cubit.bestSelling),
+            getBestSellingSection(context, cubit.bestSelling, cubit),
             const SizedBox(
               height: 15,
             ),
-            getGroceriesSection(context, cubit.groceries)
+            getGroceriesSection(context, cubit.groceries, cubit)
           ],
         ),
       ),
@@ -109,7 +134,7 @@ class ShopScreen extends StatelessWidget {
   }
 
   Widget getExclusiveOffersSection(
-      BuildContext context, List<ExclusiveModel> exclusiveModels) {
+      BuildContext context, List<ExclusiveModel> exclusiveModels, cubit) {
     return Column(
       children: [
         Row(
@@ -214,7 +239,18 @@ class ShopScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    cubit.addToCart(
+                                      name: exclusiveModel.name,
+                                      details: exclusiveModel.details,
+                                      images: exclusiveModel.images,
+                                      price: exclusiveModel.price,
+                                      review: exclusiveModel.review,
+                                      category: exclusiveModel.category,
+                                      weight: exclusiveModel.weight,
+                                      quantity: exclusiveModel.quantity,
+                                    );
+                                  },
                                   icon: const Icon(
                                     Icons.add,
                                     size: 25,
@@ -240,7 +276,7 @@ class ShopScreen extends StatelessWidget {
   }
 
   Widget getBestSellingSection(
-      BuildContext context, List<BestSellingModel> bestSellingModels) {
+      BuildContext context, List<BestSellingModel> bestSellingModels, cubit) {
     return Column(
       children: [
         Row(
@@ -344,7 +380,18 @@ class ShopScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    cubit.addToCart(
+                                      name: bestSelling.name,
+                                      details: bestSelling.details,
+                                      images: bestSelling.images,
+                                      price: bestSelling.price,
+                                      review: bestSelling.review,
+                                      category: bestSelling.category,
+                                      weight: bestSelling.weight,
+                                      quantity: bestSelling.quantity,
+                                    );
+                                  },
                                   icon: const Icon(
                                     Icons.add,
                                     size: 25,
@@ -370,7 +417,7 @@ class ShopScreen extends StatelessWidget {
   }
 
   Widget getGroceriesSection(
-      BuildContext context, List<GroceriesModel> groceriesModels) {
+      BuildContext context, List<GroceriesModel> groceriesModels, cubit) {
     return Column(
       children: [
         Row(
@@ -475,7 +522,18 @@ class ShopScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    cubit.addToCart(
+                                      name: groceriesModel.name,
+                                      details: groceriesModel.details,
+                                      images: groceriesModel.images,
+                                      price: groceriesModel.price,
+                                      review: groceriesModel.review,
+                                      category: groceriesModel.category,
+                                      weight: groceriesModel.weight,
+                                      quantity: groceriesModel.quantity,
+                                    );
+                                  },
                                   icon: const Icon(
                                     Icons.add,
                                     size: 25,
@@ -602,6 +660,7 @@ class ShopScreen extends StatelessWidget {
           ),
         ),
       );
+
   Widget getShimmerLoading() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,

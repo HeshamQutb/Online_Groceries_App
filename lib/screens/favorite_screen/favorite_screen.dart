@@ -32,25 +32,25 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         var cubit = GroceriesCubit.get(context);
         var favorites = cubit.favorites;
         return ConditionalBuilder(
-            condition: state is! GetFavouritesLoadingState,
-            builder: (context) => favorites.isNotEmpty
-                ? getFavorite(context, favorites)
-                : const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'You Don\'t any Favorite Products',
-                    style: TextStyle(fontSize: 20),
+          condition: state is! GetFavouritesLoadingState,
+          builder: (context) => favorites.isNotEmpty
+              ? getFavorite(context, favorites)
+              : const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'You Don\'t any Favorite Products',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        'Add To Favorite To See here',
+                        style: TextStyle(fontSize: 20, color: Colors.grey),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Add To Favorite To See here',
-                    style: TextStyle(fontSize: 20, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-            fallback: (context) => getShimmerLoading(),
+                ),
+          fallback: (context) => getShimmerLoading(),
         );
       },
     );
@@ -265,5 +265,4 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       ],
     );
   }
-
 }

@@ -292,7 +292,6 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
     }
   }
 
-
   // Check if an item is in favorites
   bool isInFavorites(dynamic itemName) {
     return favorites.any((favorite) => favorite.name == itemName);
@@ -301,42 +300,91 @@ class GroceriesCubit extends Cubit<GroceriesStates> {
 
 
 
-
-
-
   // Add To Cart
-  Future<void> addToCart(CartModel cartItem, String userUid) async {
-    final userCartCollection =
-        FirebaseFirestore.instance.collection('cart/$uId');
+  Future<void> addToCart({
+    required dynamic name,
+    required dynamic details,
+    required dynamic images,
+    required dynamic price,
+    required dynamic review,
+    required dynamic category,
+    required dynamic weight,
+    required dynamic quantity,
+  }) async {
+    emit(AddCartLoadingState());
+    try {
+      CartModel cart = CartModel(
+        name= name,
+        details= details,
+        images= images,
+        price= price,
+        review= review,
+        category= category,
+        weight= weight,
+        quantity= quantity,
+      );
 
-    // Check if the item is already in the cart, and update the quantity.
-    final existingCartItem =
-        await userCartCollection.where('name', isEqualTo: cartItem.name).get();
+      final userCartCollection =
+      FirebaseFirestore.instance.collection('cart');
 
-    if (existingCartItem.docs.isNotEmpty) {
-      final docId = existingCartItem.docs.first.id;
-      final currentQuantity = existingCartItem.docs.first['quantity'] ?? 0;
+      if (uId != null && uId!.isNotEmpty) {
+        final userCollectionPath =
+        userCartCollection.doc(uId).collection('user_cart');
 
-      await userCartCollection.doc(docId).update({
-        'quantity': currentQuantity + cartItem.quantity,
-      });
-    } else {
-      // If the item is not in the cart, add a new document.
-      await userCartCollection.add({
-        ...cartItem.toMap(),
-      });
+        // Check if the product with the same details already exists
+        final existingProductQuery = await userCollectionPath
+            .where('name', isEqualTo: name)
+            .where('details', isEqualTo: details)
+            .where('price', isEqualTo: price)
+            .get();
+
+        if (existingProductQuery.docs.isNotEmpty) {
+          // Product already exists in favorites, remove it
+          final existingDocId = existingProductQuery.docs.first.id;
+          await userCollectionPath.doc(existingDocId).delete();
+          emit(RemoveFromCartSuccessState());
+        } else {
+          // Product not found, add it to favorites
+          await userCollectionPath.add(cart.toMap());
+          emit(AddCartSuccessState());
+        }
+      } else {
+        throw 'Invalid uId';
+      }
+    } catch (error) {
+      emit(AddCartErrorState(error.toString()));
+      print(error.toString());
     }
   }
 
   // Get Cart
-  Future<List<CartModel>> getCart(String userUid) async {
-    final userCartCollection =
-        FirebaseFirestore.instance.collection('cart/$uId');
+  List<CartModel> cart = [];
+  bool isLoadingCart = false;
+  Future<void> getCart() async {
+    emit(GetCartLoadingState());
+    isLoadingCart = true;
 
-    final querySnapshot = await userCartCollection.get();
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('cart/$uId/user_cart')
+          .get();
 
-    return querySnapshot.docs.map((doc) {
-      return CartModel.fromJson(doc.data());
-    }).toList();
+      cart = querySnapshot.docs.map((doc) {
+        return CartModel.fromJson(doc.data());
+      }).toList();
+
+      isLoadingCart = false;
+      emit(GetCartSuccessState());
+    } catch (error) {
+      isLoadingCart = false;
+      print('Error fetching carts products: $error');
+      emit(GetCartErrorState(error.toString()));
+    }
   }
+
+  bool isInCart(dynamic itemName) {
+    return cart.any((cart) => cart.name == itemName);
+  }
+
+
 }

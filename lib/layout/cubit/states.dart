@@ -94,17 +94,34 @@ class GetFavouritesErrorState extends GroceriesStates{
   GetFavouritesErrorState(this.error);
 }
 
-
-// get Favourites
-
-class RemoveFromFavoritesLoadingState extends GroceriesStates{}
-
+// Remove Favourites
 class RemoveFromFavoritesSuccessState extends GroceriesStates{}
 
-class RemoveFromFavoritesErrorState extends GroceriesStates{
+
+
+
+// Add to Cart
+class AddCartLoadingState extends GroceriesStates{}
+
+class AddCartSuccessState extends GroceriesStates{}
+
+class AddCartErrorState extends GroceriesStates{
   final String error;
-  RemoveFromFavoritesErrorState(this.error);
+  AddCartErrorState(this.error);
 }
 
+// get Cart
+class GetCartLoadingState extends GroceriesStates{}
+
+class GetCartSuccessState extends GroceriesStates{}
+
+class GetCartErrorState extends GroceriesStates{
+  final String error;
+  GetCartErrorState(this.error);
+}
+
+// Remove Cart
+
+class RemoveFromCartSuccessState extends GroceriesStates{}
 
 
